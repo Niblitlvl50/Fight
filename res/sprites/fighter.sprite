@@ -1,0 +1,101 @@
+{
+    "animations": [
+        {
+            "frames": [
+                0,
+                92,
+                1,
+                100,
+                2,
+                100,
+                3,
+                100,
+                2,
+                100
+            ],
+            "loop": true,
+            "name": "walking"
+        },
+        {
+            "frames": [
+                0,
+                100
+            ],
+            "loop": false,
+            "name": "idle"
+        },
+        {
+            "frames": [
+                4,
+                54,
+                5,
+                54,
+                6,
+                54,
+                5,
+                35
+            ],
+            "loop": false,
+            "name": "kick1"
+        },
+        {
+            "frames": [
+                4,
+                420,
+                9,
+                464,
+                10,
+                546,
+                9,
+                477
+            ],
+            "loop": false,
+            "name": "kick2"
+        },
+        {
+            "frames": [
+                4,
+                100,
+                13,
+                142,
+                14,
+                205,
+                13,
+                67
+            ],
+            "loop": false,
+            "name": "kick3"
+        },
+        {
+            "frames": [
+                4,
+                79,
+                17,
+                67,
+                18,
+                35,
+                17,
+                42,
+                4,
+                23
+            ],
+            "loop": false,
+            "name": "punch"
+        },
+        {
+            "frames": [
+                16,
+                100
+            ],
+            "loop": false,
+            "name": "block"
+        }
+    ],
+    "columns": 4,
+    "rows": 5,
+    "texture": "textures/fighter.png",
+    "u": 286,
+    "v": 334,
+    "x": 33,
+    "y": 17
+}
