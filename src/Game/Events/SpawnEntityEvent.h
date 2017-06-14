@@ -3,15 +3,11 @@
 
 #include "MonoFwd.h"
 
-namespace game
+struct SpawnEntityEvent
 {
-    struct SpawnEntityEvent
-    {
-        SpawnEntityEvent(const mono::IEntityPtr& entity)
-            : entity(entity)
-        { }
+    SpawnEntityEvent(const mono::IEntityPtr& entity)
+        : entity(entity)
+    { }
 
-        const mono::IEntityPtr entity;
-    };
-}
-
+    const mono::IEntityPtr entity;
+};

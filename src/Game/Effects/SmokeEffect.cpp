@@ -30,7 +30,7 @@ namespace
 
 SmokeEffect::SmokeEffect(const math::Vector& position)
 {
-    mPosition = position;
+    m_position = position;
 
     mono::ParticleEmitter::Configuration config;
     //config.position = position;

@@ -1,75 +1,15 @@
 
 #include "FightZone.h"
 
-#include "Math/Vector.h"
-#include "Math/MathFunctions.h"
-
-#include "Rendering/ICamera.h"
-#include "Rendering/IDrawable.h"
-#include "Rendering/IRenderer.h"
-#include "Rendering/Color.h"
-
 #include "Fighter.h"
 #include "FighterFactory.h"
 
-#include <cstdio>
+#include "Events/GameEventFuncFwd.h"
+#include "Events/SpawnEntityEvent.h"
+#include "Events/RemoveEntityEvent.h"
+#include "UpdateTasks/CollisionHandler.h"
 
-namespace
-{
-    class PropDrawer : public mono::IDrawable
-    {
-    public:
-
-        PropDrawer(const std::vector<math::Quad>& props)
-            : m_props(props)
-        { }
-
-        void doDraw(mono::IRenderer& renderer) const
-        {
-            constexpr mono::Color::RGBA color(1, 0, 0);
-
-            for(const math::Quad& prop : m_props)
-                renderer.DrawQuad(prop, color, 2.0f);
-        }
-
-        math::Quad BoundingBox() const
-        {
-            return math::Quad(-math::INF, -math::INF, math::INF, math::INF);
-        }
-
-        const std::vector<math::Quad>& m_props;
-    };
-
-    class CollisionDetector : public mono::IUpdatable
-    {
-    public:
-
-        CollisionDetector(const std::shared_ptr<Fighter>& fighter, const std::vector<math::Quad>& props)
-            : m_fighter(fighter),
-              m_props(props)
-        { }
-
-        void doUpdate(unsigned int delta)
-        {
-            const math::Vector& punch = m_fighter->PunchPosition();
-            const math::Vector& kick = m_fighter->KickPosition();
-
-            for(const math::Quad& prop : m_props)
-            {
-                const bool punch_hit = math::PointInsideQuad(punch, prop);
-                if(punch_hit)
-                    std::printf("Punch hit!\n");
-
-                const bool kick_hit = math::PointInsideQuad(kick, prop);
-                if(kick_hit)
-                    std::printf("Kick hit!\n");
-            }
-        }
-        
-        const std::shared_ptr<Fighter> m_fighter;
-        const std::vector<math::Quad>& m_props;
-    };
-}
+#include "EventHandler/EventHandler.h"
 
 FightZone::FightZone(mono::EventHandler& event_handler)
     : PhysicsZone(math::Vector(0.0f, 9.81f), 0.9f),
@@ -79,10 +19,21 @@ FightZone::FightZone(mono::EventHandler& event_handler)
         math::Quad(100, 80, 120, 120),
         math::Quad(200, 80, 220, 220)
     };
+
+    using namespace std::placeholders;
+
+    const SpawnEntityFunc& spawn_func = std::bind(&FightZone::SpawnEntity, this, _1);
+    const RemoveEntityFunc& despawn_func = std::bind(&FightZone::DespawnEntity, this, _1);
+
+    m_spawn_token = m_event_handler.AddListener(spawn_func);
+    m_despawn_token = m_event_handler.AddListener(despawn_func);
 }
 
 FightZone::~FightZone()
-{ }
+{
+    m_event_handler.RemoveListener(m_spawn_token);
+    m_event_handler.RemoveListener(m_despawn_token);    
+}
 
 void FightZone::OnLoad(mono::ICameraPtr camera)
 {
@@ -90,14 +41,27 @@ void FightZone::OnLoad(mono::ICameraPtr camera)
     fighter->SetPosition(math::Vector(100, 100));
 
     auto ai_fighter = CreateAIFighter(m_event_handler, fighter);
-    ai_fighter->SetPosition(math::Vector(250, 100));
+    ai_fighter->SetPosition(math::Vector(200, 100));
 
     AddEntity(ai_fighter, 1);
     AddEntity(fighter, 1);
-
-    AddDrawable(std::make_shared<PropDrawer>(m_props), 0);
-    //AddUpdatable(std::make_shared<CollisionDetector>(fighter, m_props));
+    AddUpdatable(std::make_shared<CollisionHandler>(m_event_handler, fighter, ai_fighter, m_props));
 }
 
 void FightZone::OnUnload()
 { }
+
+bool FightZone::SpawnEntity(const SpawnEntityEvent& event)
+{
+    AddEntity(event.entity, 2);
+    return false;
+}
+
+bool FightZone::DespawnEntity(const RemoveEntityEvent& event)
+{
+    const auto entity = FindEntityFromId(event.id);
+    if(entity)
+        RemoveEntity(entity);
+
+    return false;
+}

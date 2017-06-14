@@ -6,13 +6,21 @@
 #include "Moves/FightMove.h"
 #include "StateMachine.h"
 
+#include <string>
+
 enum class FightStates
 {
     IDLE,
-    WALK_LEFT,
-    WALK_RIGHT,
-    PUNCHING,
-    KICKING
+    HIT,
+    WALKING,
+    JUMPING,
+    ATTACKING
+};
+
+enum class Direction
+{
+    LEFT,
+    RIGHT
 };
 
 class IFighterController
@@ -40,31 +48,39 @@ public:
     void Punch();
     void Kick();
     void Jump();
+    void Walk(Direction direction);
 
     bool ExecutePunchSpecial();
 
     // Transisions
     void ToIdle();
+    void ToHit();
     void ToWalking();
-    void ToPunching();
-    void ToKicking();
+    void ToJumping();
+    void ToAttacking();
 
     // States
-    void WalkLeft(float delta);
-    void WalkRight(float delta);
+    void HitState(unsigned int delta);
+    void Walking(unsigned int delta);
+    void Jumping(unsigned int delta);
 
-    const math::Vector PunchPosition() const;
-    const math::Vector KickPosition() const;
+    bool IsAttacking() const;
+    bool IsInvulnerable() const;
+    const math::Vector AttackPosition() const;
+    std::vector<math::Quad> HitBoxes() const;
+
+    void OnHit(const math::Vector& hit_position);
 
     std::unique_ptr<IFighterController> m_controller;
 
-    bool m_left;
-    bool m_right;
+    bool m_invulnerable;
+    int m_invulnerable_counter;
+    Direction m_walk_direction;
 
     mono::ISpritePtr m_sprite;
 
-    math::Vector m_punch_position;
-    math::Vector m_kick_position;
+    math::Vector m_attack_position;
+    std::string m_attack_animation;
 
     std::vector<FightMove> m_moves;
     std::vector<std::unique_ptr<mono::IAction>> m_actions;

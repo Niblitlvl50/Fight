@@ -1,14 +1,11 @@
 
 #pragma once
 
-namespace game
+struct RemoveEntityEvent
 {
-    struct RemoveEntityEvent
-    {
-        constexpr RemoveEntityEvent(unsigned int id)
-            : id(id)
-        { }
+    constexpr RemoveEntityEvent(unsigned int id)
+        : id(id)
+    { }
 
-        const unsigned int id;
-    };
-}
+    const unsigned int id;
+};

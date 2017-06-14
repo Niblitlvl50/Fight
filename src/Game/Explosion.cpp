@@ -6,18 +6,16 @@
 #include "Events/RemoveEntityEvent.h"
 #include "EventHandler/EventHandler.h"
 
-using namespace game;
-
 Explosion::Explosion(const ExplosionConfiguration& config, mono::EventHandler& event_handler)
 {
-    mPosition = config.position;
-    mScale = math::Vector(config.scale, config.scale);
-    mRotation = config.rotation;
+    m_position = config.position;
+    m_scale = math::Vector(config.scale, config.scale);
+    m_rotation = config.rotation;
 
     const unsigned int id = Id();
 
     const auto func = [&event_handler, id] {
-        event_handler.DispatchEvent(game::RemoveEntityEvent(id));
+        event_handler.DispatchEvent(RemoveEntityEvent(id));
     };
     
     m_sprite = mono::CreateSprite(config.sprite_file);

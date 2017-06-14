@@ -4,16 +4,13 @@
 #include "MonoFwd.h"
 #include "MonoPtrFwd.h"
 
-namespace game
+struct SpawnPhysicsEntityEvent
 {
-    struct SpawnPhysicsEntityEvent
-    {
-        SpawnPhysicsEntityEvent(const mono::IPhysicsEntityPtr& entity, int layer)
-            : entity(entity),
-              layer(layer)
-        { }
+    SpawnPhysicsEntityEvent(const mono::IPhysicsEntityPtr& entity, int layer)
+        : entity(entity),
+          layer(layer)
+    { }
 
-        mono::IPhysicsEntityPtr entity;
-        const int layer;
-    };
-}
+    mono::IPhysicsEntityPtr entity;
+    const int layer;
+};

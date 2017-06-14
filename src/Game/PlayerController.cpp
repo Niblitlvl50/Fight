@@ -58,11 +58,11 @@ bool PlayerController::OnKeyDown(const event::KeyDownEvent& event)
             break;
         case Keycode::LEFT:
             input.input_key = Input::LEFT;
-            m_fighter->m_machine.TransitionTo(FightStates::WALK_LEFT);
+            m_fighter->Walk(Direction::LEFT);
             break;
         case Keycode::RIGHT:
             input.input_key = Input::RIGHT;
-            m_fighter->m_machine.TransitionTo(FightStates::WALK_RIGHT);
+            m_fighter->Walk(Direction::RIGHT);
             break;
         default:
             break;
