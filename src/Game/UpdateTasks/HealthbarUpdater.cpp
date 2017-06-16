@@ -9,8 +9,6 @@
 
 #include <limits>
 
-using namespace game;
-
 HealthbarUpdater::HealthbarUpdater(std::vector<Healthbar>& healthbars, const DamageController& damage_controller, const mono::IPhysicsZone& zone)
     : m_healthbars(healthbars),
         m_damageController(damage_controller),

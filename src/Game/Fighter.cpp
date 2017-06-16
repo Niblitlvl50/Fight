@@ -74,11 +74,11 @@ void Fighter::Draw(mono::IRenderer& renderer) const
 {
     renderer.DrawSprite(*m_sprite);
 
-    constexpr mono::Color::RGBA color(1, 0, 1);
-    renderer.DrawCircle(m_attack_position, 0.08f, 20, 2.0f, color);
+    //constexpr mono::Color::RGBA color(1, 0, 1);
+    //renderer.DrawCircle(m_attack_position, 0.08f, 20, 2.0f, color);
 
     const char* text = FightStateToText(m_machine.ActiveState());
-    renderer.DrawText(game::FontId::SMALL, text, math::Vector(0, 1), true, mono::Color::RGBA());
+    renderer.DrawText(game::FontId::SMALL, text, math::Vector(0, -0.7), true, mono::Color::RGBA(1, 1, 0));
 }
 
 void Fighter::Update(unsigned int delta)
@@ -137,11 +137,11 @@ void Fighter::Kick()
 
 void Fighter::Jump()
 {
-    //auto sequence = std::make_unique<SequenceAction>();
-    //sequence->AddAction(std::make_unique<MoveAction>(m_kick_position, math::Vector(0, 1), 50));
-    //sequence->AddAction(std::make_unique<MoveAction>(m_kick_position, math::Vector(0, 0), 100));
+    auto sequence = std::make_unique<SequenceAction>();
+    sequence->AddAction(std::make_unique<MoveAction>(m_position, m_position + math::Vector(0, 40), 100));
+    sequence->AddAction(std::make_unique<MoveAction>(m_position, m_position, 100));
 
-    //m_actions.push_back(std::move(sequence));
+    m_actions.push_back(std::move(sequence));
 }
 
 void Fighter::Walk(Direction direction)

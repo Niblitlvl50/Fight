@@ -4,8 +4,6 @@
 
 #include <limits>
 
-using namespace game;
-
 DamageRecord& DamageController::CreateRecord(unsigned int record_id)
 {
     const auto& pair = m_DamageRecords.insert(std::make_pair(record_id, DamageRecord()));

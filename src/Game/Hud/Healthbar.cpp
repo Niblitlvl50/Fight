@@ -4,7 +4,6 @@
 #include "Rendering/Color.h"
 #include "Math/Quad.h"
 
-using namespace game;
 
 namespace
 {

@@ -1,12 +1,9 @@
 
 #pragma once
 
-namespace game
+enum RenderLayerId
 {
-    enum LayerId
-    {
-        BACKGROUND,
-        MIDDLEGROUND,
-        FOREGROUND
-    };
-}
+    BACKGROUND,
+    MIDDLEGROUND,
+    FOREGROUND
+};

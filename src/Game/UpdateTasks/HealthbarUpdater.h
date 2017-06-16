@@ -5,26 +5,23 @@
 #include "MonoFwd.h"
 #include <vector>
 
-namespace game
+class DamageController;
+struct Healthbar;
+
+class HealthbarUpdater : public mono::IUpdatable
 {
-    class DamageController;
-    struct Healthbar;
+public:
 
-    class HealthbarUpdater : public mono::IUpdatable
-    {
-    public:
+    HealthbarUpdater(
+        std::vector<Healthbar>& healthbars,
+        const DamageController& damage_controller,
+        const mono::IPhysicsZone& zone);
 
-        HealthbarUpdater(
-            std::vector<Healthbar>& healthbars,
-            const DamageController& damage_controller,
-            const mono::IPhysicsZone& zone);
+    virtual void doUpdate(unsigned int delta);
 
-        virtual void doUpdate(unsigned int delta);
+private:
 
-    private:
-
-        std::vector<Healthbar>& m_healthbars;
-        const DamageController& m_damageController;
-        const mono::IPhysicsZone& m_zone;
-    };
-}
+    std::vector<Healthbar>& m_healthbars;
+    const DamageController& m_damageController;
+    const mono::IPhysicsZone& m_zone;
+};

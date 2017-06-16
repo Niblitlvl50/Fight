@@ -2,6 +2,8 @@
 #include "CollisionHandler.h"
 #include "Fighter.h"
 #include "Explosion.h"
+#include "DamageController.h"
+
 #include "Events/SpawnEntityEvent.h"
 #include "EventHandler/EventHandler.h"
 
@@ -11,10 +13,12 @@
 
 CollisionHandler::CollisionHandler(
     mono::EventHandler& event_handler,
+    DamageController& damage_controller,
     const std::shared_ptr<Fighter>& fighter1,
     const std::shared_ptr<Fighter>& fighter2,
     const std::vector<math::Quad>& props)
     : m_event_handler(event_handler),
+      m_damage_controller(damage_controller),
       m_fighter1(fighter1),
       m_fighter2(fighter2),
       m_props(props)
@@ -39,6 +43,7 @@ void CollisionHandler::doUpdate(unsigned int delta)
         if(hit)
         {
             m_fighter2->OnHit(attack_position);
+            m_damage_controller.ApplyDamage(m_fighter2->Id(), 10);
             SpawnHitEffect(attack_position);
             break;
         }
@@ -50,7 +55,7 @@ void CollisionHandler::SpawnHitEffect(const math::Vector& position)
     ExplosionConfiguration config;
     config.position = position;
     config.scale = 10.0f;
-    config.sprite_file = "sprites/explosion.sprite";
+    config.sprite_file = "sprites/cacoexplosion.sprite";
 
     const SpawnEntityEvent event(std::make_shared<Explosion>(config, m_event_handler));
     m_event_handler.DispatchEvent(event);
